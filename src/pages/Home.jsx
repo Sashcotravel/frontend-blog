@@ -33,7 +33,7 @@ export const Home = () => {
             </Tabs>
             <Grid container spacing={4}>
                 <Grid xs={8} item>
-                    {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) => (
+                    {(isPostsLoading ? [...Array(5)] : posts.items)?.map((obj, index) => (
                         isPostsLoading ? (<Post key={index} isLoading={true}/>)
                             : (
                             <Post
