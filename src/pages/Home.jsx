@@ -33,15 +33,18 @@ export const Home = () => {
             </Tabs>
             <Grid container spacing={4}>
                 <Grid xs={8} item>
-                    {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) => (
+                   {(isPostsLoading ? [...Array(5)] : posts.items).map((obj, index) => (
                         isPostsLoading ? (<Post key={index} isLoading={true}/>)
                             : (
                             <Post
                                 key={index}
                                 _id={obj._id}
                                 title={obj.title}
+<<<<<<< HEAD
                                 // http://localhost:4444
                                 // process.env.REACT_APP_API_URL
+=======
+>>>>>>> c8113b906fc8785cfc2d8675d0ab4459ba87d426
                                 imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}` : ''}
                                 user={obj.user}
                                 createdAt={obj.createdAt}
