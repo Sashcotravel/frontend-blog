@@ -41,6 +41,7 @@ export const Home = () => {
                                 _id={obj._id}
                                 title={obj.title}
                                 // http://localhost:4444
+                                // process.env.REACT_APP_API_URL
                                 imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}` : ''}
                                 user={obj.user}
                                 createdAt={obj.createdAt}
@@ -52,7 +53,7 @@ export const Home = () => {
                         )))}
                 </Grid>
                 <Grid xs={4} item>
-                    {/*<TagsBlock items={tags?.items} isLoading={isTagsLoading}/>*/}
+                    <TagsBlock items={tags?.items} isLoading={isTagsLoading}/>
                     <CommentsBlock
                         items={[
                             {
