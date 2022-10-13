@@ -32,7 +32,7 @@ export const FullPost = () => {
                         title={data?.title}
                         // http://localhost:4444
                         // ${process.env.REACT_APP_API_URL}
-                        imageUrl={data?.imageUrl ? `http://localhost:4444${data.imageUrl}` : ''}
+                        imageUrl={data?.imageUrl ? `${process.env.REACT_APP_API_URL}${data.imageUrl}` : ''}
                         user={data?.user}
                         createdAt={data?.createdAt}
                         viewsCount={data?.viewsCount}

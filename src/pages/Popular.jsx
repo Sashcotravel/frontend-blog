@@ -42,7 +42,7 @@ export const Popular = () => {
                                     title={obj.title}
                                     // http://localhost:4444
                                     // ${process.env.REACT_APP_API_URL}
-                                    imageUrl={obj.imageUrl ? `http://localhost:4444${obj.imageUrl}` : ''}
+                                    imageUrl={obj.imageUrl ? `${process.env.REACT_APP_API_URL}${obj.imageUrl}` : ''}
                                     user={obj.user}
                                     createdAt={obj.createdAt}
                                     viewsCount={obj.viewsCount}
