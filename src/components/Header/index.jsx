@@ -6,10 +6,10 @@ import Container from '@mui/material/Container';
 import {Link} from "react-router-dom";
 import {isAuthSelector, logout} from "../../redux/slices/auth";
 import {useDispatch, useSelector} from "react-redux";
-import { Navigate } from "react-router-dom";
 
 
 export const Header = () => {
+
   const isAuth = useSelector(isAuthSelector)
   const dispatch = useDispatch()
 

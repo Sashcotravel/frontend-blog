@@ -12,6 +12,11 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
     return data
 })
 
+export const fetchOneTags = createAsyncThunk('posts/fetchOneTags', async (tags) => {
+    const { data } = await instance.get(`/posts/posts/tags/${tags}`)
+    return data
+})
+
 export const fetchIdPosts = createAsyncThunk('posts/fetchIdPosts', async (id) => {
     const { data } = await instance.get(`/posts/${id}`)
     return data
@@ -19,6 +24,11 @@ export const fetchIdPosts = createAsyncThunk('posts/fetchIdPosts', async (id) =>
 
 export const fetchDeletePost = createAsyncThunk('posts/fetchDeletePost', async (id) => {
     const { data } = instance.delete(`/posts/${id}`)
+    return data
+})
+
+export const fetchPopulatePosts = createAsyncThunk('posts/fetchPopulatePosts', async () => {
+    const { data } = await instance.get('/posts/all/populate')
     return data
 })
 

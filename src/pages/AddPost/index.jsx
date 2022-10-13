@@ -101,7 +101,8 @@ export const AddPost = () => {
                         Delete
                     </Button>
                     {/*http://localhost:4444*/}
-                    <img className={styles.image} src={`${process.env.REACT_APP_API_URL}${fields.imageUrl}`} alt="Uploaded"/>
+                    {/*${process.env.REACT_APP_API_URL}*/}
+                    <img className={styles.image} src={`http://localhost:4444${fields.imageUrl}`} alt="Uploaded"/>
                 </>
             )}
             <br/>

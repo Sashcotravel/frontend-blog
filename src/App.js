@@ -7,6 +7,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 import {fetchAuthMe} from "./API/auth";
 import {isAuthSelector} from "./redux/slices/auth";
+import {Popular} from "./pages/Popular";
+import {TagsPage} from "./components/TagsPage";
 
 function App() {
 
@@ -30,6 +32,8 @@ function App() {
                     <Route path='/add-post' element={<AddPost/>} />
                     <Route path='/login' element={<Login/>} />
                     <Route path='/register' element={<Registration/>} />
+                    <Route path='/popular' element={<Popular/>} />
+                    <Route path={`/tags`} element={<TagsPage/>} />
                 </Routes>
             </Container>
         </>
