@@ -1,5 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {fetchDeletePost, fetchOneTags, fetchPopulatePosts, fetchPosts, fetchTags} from "../../API/post";
+import {
+    fetchAllComments, fetchDeleteComments,
+    fetchDeletePost,
+    fetchOneTags,
+    fetchPopulatePosts,
+    fetchPosts,
+    fetchTags,
+    fetchIdPosts
+} from "../../API/post";
 
 const initialState = {
     posts: {
@@ -7,6 +15,11 @@ const initialState = {
         status: 'loading'
     },
     tags: {
+        items: [],
+        tagsOne: '',
+        status: 'loading'
+    },
+    comments: {
         items: [],
         status: 'loading'
     }
@@ -28,7 +41,20 @@ const postsSlice = createSlice({
         [fetchPosts.rejected]: (state) => {
             state.posts.items = []
             state.posts.status = 'error'
-        },[fetchPopulatePosts.pending]: (state) => {
+        },
+        [fetchAllComments.pending]: (state) => {
+            state.comments.items = []
+            state.comments.status = 'loading'
+        },
+        [fetchAllComments.fulfilled]: (state, action) => {
+            state.comments.items = action.payload
+            state.comments.status = 'loaded'
+        },
+        [fetchAllComments.rejected]: (state) => {
+            state.comments.items = []
+            state.comments.status = 'error'
+        },
+        [fetchPopulatePosts.pending]: (state) => {
             state.posts.items = []
             state.posts.status = 'loading'
         },
@@ -57,15 +83,31 @@ const postsSlice = createSlice({
             state.tags.status = 'loading'
         },
         [fetchOneTags.fulfilled]: (state, action) => {
-            state.posts.items = action.payload
+            state.posts.items = action.payload.ass
+            state.tags.tagsOne = action.payload.tagsOne
             state.tags.status = 'loaded'
         },
         [fetchOneTags.rejected]: (state) => {
             state.tags.items = []
             state.tags.status = 'error'
         },
+        [fetchIdPosts.pending]: (state) => {
+            state.tags.items = []
+            state.tags.status = 'loading'
+        },
+        [fetchIdPosts.fulfilled]: (state, action) => {
+            state.posts.items = action.payload
+            state.tags.status = 'loaded'
+        },
+        [fetchIdPosts.rejected]: (state) => {
+            state.tags.items = []
+            state.tags.status = 'error'
+        },
         [fetchDeletePost.pending]: (state, action) => {
             state.posts.items = state.posts.items.filter(obj => obj._id !== action.meta.arg)
+        },
+        [fetchDeleteComments.pending]: (state, action) => {
+            state.comments.items = state.comments.items.filter(obj => obj._id !== action.meta.arg)
         },
     }
 })

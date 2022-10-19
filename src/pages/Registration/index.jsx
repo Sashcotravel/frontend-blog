@@ -7,7 +7,7 @@ import Avatar from '@mui/material/Avatar';
 
 import styles from './Login.module.scss';
 import {useForm} from "react-hook-form";
-import {fetchRegister} from "../../API/auth";
+import {fetchAuthMe, fetchRegister} from "../../API/auth";
 import {useDispatch, useSelector} from "react-redux";
 import {Navigate} from "react-router-dom";
 import {isAuthSelector} from "../../redux/slices/auth";
@@ -31,7 +31,9 @@ export const Registration = () => {
         if('token' in data.payload) {
             window.localStorage.setItem('token', data.payload.token)
         }
+        await dispatch(fetchAuthMe())
     }
+
 
     if(isAuth){
         return  <Navigate to={'/'}/>

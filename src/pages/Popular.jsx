@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import s from "./Home.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchPopulatePosts, fetchPosts, fetchTags} from "../API/post";
+import {fetchAllComments, fetchPopulatePosts, fetchPosts, fetchTags} from "../API/post";
 import {CommentsBlock, Post, TagsBlock} from "../components";
 import Grid from "@mui/material/Grid";
 
@@ -10,18 +10,19 @@ import Grid from "@mui/material/Grid";
 
 export const Popular = () => {
 
-    const {posts, tags} = useSelector(state => state.posts)
+    const {posts, tags, comments} = useSelector(state => state.posts)
+    const userData = useSelector(state => state.auth.data)
 
     const dispatch = useDispatch()
 
     const isPostsLoading = posts.status === 'loading'
-    const userData = useSelector(state => state.auth.data)
     const isTagsLoading = tags.status === 'loading'
 
 
     useEffect(() => {
         dispatch(fetchPopulatePosts())
         dispatch(fetchTags())
+        dispatch(fetchAllComments())
     }, []);
 
 
@@ -46,33 +47,16 @@ export const Popular = () => {
                                     user={obj.user}
                                     createdAt={obj.createdAt}
                                     viewsCount={obj.viewsCount}
-                                    commentsCount={3}
+                                    commentsCount={comments?.items}
+                                    likeCount={obj.likeCount}
                                     tags={obj.tags}
-                                    isEditable={userData?._id === obj.user._id}
+                                    isEditable={userData?._id === obj?.user?._id}
                                 />
                             )))}
                 </Grid>
                 <Grid xs={4} item>
                     <TagsBlock items={tags?.items} isLoading={isTagsLoading}/>
-                    <CommentsBlock
-                        items={[
-                            {
-                                user: {
-                                    fullName: 'Вася Пупкин',
-                                    avatarUrl: 'https://mui.com/static/images/avatar/1.jpg',
-                                },
-                                text: 'Это тестовый комментарий',
-                            },
-                            {
-                                user: {
-                                    fullName: 'Иван Иванов',
-                                    avatarUrl: 'https://mui.com/static/images/avatar/2.jpg',
-                                },
-                                text: 'When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top',
-                            },
-                        ]}
-                        isLoading={false}
-                    />
+                    <CommentsBlock isLoading={false} />
                 </Grid>
             </Grid>
         </>

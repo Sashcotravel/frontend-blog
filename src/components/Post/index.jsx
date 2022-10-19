@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import clsx from 'clsx';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Clear';
@@ -11,15 +11,17 @@ import {UserInfo} from '../UserInfo';
 import {PostSkeleton} from './Skeleton';
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {isAuthSelector, logout} from "../../redux/slices/auth";
-import {fetchDeletePost} from "../../API/post";
+import {fetchDeletePost, fetchLikePosts, fetchPosts} from "../../API/post";
+import imageU from './../../image/heart-regular.svg'
+import s from "../AddComment/AddComment.module.scss";
+import {fetchAuthMe, fetchLike, fetchLikeToggle} from "../../API/auth";
 
 export const Post = ({
-                         _id, title, createdAt, imageUrl, user, viewsCount,
+                         _id, title, createdAt, imageUrl, user, viewsCount, likeCount,
                          commentsCount, tags, children, isFullPost, isLoading, isEditable
                      }) => {
 
-    const isAuth = useSelector(isAuthSelector)
+    const idUser = useSelector(state => state.auth.data)
     const dispatch = useDispatch()
 
     if (isLoading) {
@@ -27,10 +29,35 @@ export const Post = ({
     }
 
     const onClickRemove = () => {
-        if(window.confirm('Are you sure you want to delete?')){
+        if (window.confirm('Are you sure you want to delete?')) {
             dispatch(fetchDeletePost(_id))
         }
     };
+
+    const like = async () => {
+
+        let res = idUser.postLike.filter(obj => obj.postId === _id ? obj : false)
+        if (res.length !== 0) { // якщо not пустий
+            if (res[0].like) {
+                await dispatch(fetchLikeToggle({id: idUser.email, postId: _id, like: false}))
+                await dispatch(fetchAuthMe())
+                await dispatch(fetchLikePosts({id: _id, act: false, like: likeCount}))
+            } else {
+                await dispatch(fetchLikeToggle({id: idUser.email, postId: _id, like: true}))
+                await dispatch(fetchAuthMe())
+                await dispatch(fetchLikePosts({id: _id, act: true, like: likeCount}))
+            }
+        } else {
+            await dispatch(fetchLike({id: idUser.email, postId: _id, like: true}))
+            await dispatch(fetchAuthMe())
+            dispatch(fetchLikePosts({id: _id, act: true, like: likeCount}))
+        }
+
+        dispatch(fetchPosts())
+    }
+
+    let count = []
+    count = (commentsCount.length === undefined) ? commentsCount : commentsCount?.map(obj => obj.postId === _id ? count.push(+1) : 0) && count.length
 
     return (
         <div className={clsx(styles.root, {[styles.rootFull]: isFullPost})}>
@@ -74,7 +101,20 @@ export const Post = ({
                         </li>
                         <li>
                             <CommentIcon/>
-                            <span>{commentsCount}</span>
+                            <span>{count}</span>
+                        </li>
+                        <li>
+                            {
+                                likeCount === undefined
+                                    ?
+                                    <>
+                                        <span></span>
+                                    </>
+                                    : <>
+                                        <span><img className={s.edit} src={imageU} onClick={like}/></span>
+                                        <span style={{marginBottom: '8px'}}>{likeCount === 0 ? '' : likeCount}</span>
+                                    </>
+                            }
                         </li>
                     </ul>
                 </div>

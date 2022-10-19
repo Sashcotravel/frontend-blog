@@ -10,7 +10,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 import {SideBlock} from "./SideBlock";
 import {Link} from "react-router-dom";
-import {fetchOneTags, fetchPopulatePosts} from "../API/post";
+import {fetchOneTags} from "../API/post";
 import {useDispatch} from "react-redux";
 
 export const TagsBlock = ({items, isLoading = true}) => {

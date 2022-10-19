@@ -48,7 +48,6 @@ export const AddPost = () => {
 
     const onSubmit = async () => {
         setLoading(true)
-
         const { data } = isEditing
             ? await instance.patch(`/posts/${id}`, fields)
             : await instance.post('/posts', fields)
@@ -79,7 +78,7 @@ export const AddPost = () => {
                     title: data.title,
                     tags: data.tags.join(','),
                     imageUrl: data.imageUrl,
-                    text: data.text,
+                    text: data.text
                 }
             })
         })
@@ -92,7 +91,7 @@ export const AddPost = () => {
     return (
         <Paper style={{padding: 30}}>
             <Button onClick={() => inputFileRef.current.click()} variant="outlined" size="large">
-                Загрузить превью
+                Download preview
             </Button>
             <input ref={inputFileRef} type="file" onChange={handleChangeFile} hidden/>
             {fields.imageUrl && (
@@ -136,7 +135,7 @@ export const AddPost = () => {
             />
             <div className={styles.buttons}>
                 <Button onClick={onSubmit} size="large" variant="contained">
-                    {isEditing ? 'Save' : 'Опубликовать'}
+                    {isEditing ? 'Save' : 'Publish'}
                 </Button>
                 <Link to="/">
                     <Button size="large">Cancel</Button>

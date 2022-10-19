@@ -5,64 +5,59 @@ import {Post} from "../components/Post";
 import {Index} from "../components/AddComment";
 import {CommentsBlock} from "../components/CommentsBlock";
 import {useParams} from "react-router-dom";
-import {fetchIdPosts} from "../API/post";
+import {fetchAllComments, fetchIdPosts, fetchPosts, fetchTags} from "../API/post";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect} from "react";
 
 export const FullPost = () => {
 
+    let count = []
     const dispatch = useDispatch()
-    const { id } = useParams()
-    const [data, setData] = useState()
+    const {id} = useParams()
+    const {comments} = useSelector(state => state.posts)
 
-    const { posts } = useSelector(state => state.posts)
+    const {posts} = useSelector(state => state.posts)
 
-    useEffect(() => {
-        dispatch(fetchIdPosts(id)).then(res => setData(res.payload))
+
+    useEffect( () => {
+        dispatch(fetchIdPosts(id))
+        dispatch(fetchAllComments())
+
+        return () => {
+            dispatch(fetchPosts())
+            dispatch(fetchTags())
+            dispatch(fetchAllComments())
+        };
     }, [])
+
+
 
     const isPostsLoading = posts.status === 'loading'
 
     return (
         <>
             {
-                isPostsLoading ? <Post isLoading={true}/>
-                    : <Post
-                        _id={data?._id}
-                        title={data?.title}
+                // isPostsLoading ? <Post isLoading={!posts.items ? true : false}/>
+                //     :
+                <Post
+                        _id={posts?.items?._id}
+                        title={posts?.items?.title}
                         // http://localhost:4444
                         // ${process.env.REACT_APP_API_URL}
-                        imageUrl={data?.imageUrl ? `${process.env.REACT_APP_API_URL}${data.imageUrl}` : ''}
-                        user={data?.user}
-                        createdAt={data?.createdAt}
-                        viewsCount={data?.viewsCount}
-                        commentsCount={3}
-                        tags={data?.tags}
+                        imageUrl={posts?.items?.imageUrl ? `${process.env.REACT_APP_API_URL}${posts.items?.imageUrl}` : ''}
+                        user={posts?.items?.user}
+                        createdAt={posts?.items?.createdAt}
+                        viewsCount={posts?.items?.viewsCount}
+                        commentsCount={comments?.items.map(obj => obj.postId === posts?.items?._id ? count.push(obj.postId) : 0) && count?.length}
+                        // likeCount={posts?.items?.likeCount}
+                        tags={posts?.items?.tags}
                         isFullPost
-                    ><ReactMarkdown children={data?.text} />
-                        <p>{ data?.text }</p></Post>
+                    ><ReactMarkdown children={posts?.items?.text}/>
+                        {/*<p>{data?.text}</p>*/}
+                </Post>
             }
-            <CommentsBlock
-                items={[
-                    {
-                        user: {
-                            fullName: "Вася Пупкин",
-                            avatarUrl: "https://mui.com/static/images/avatar/1.jpg",
-                        },
-                        text: "Это тестовый комментарий 555555",
-                    },
-                    {
-                        user: {
-                            fullName: "Иван Иванов",
-                            avatarUrl: "https://mui.com/static/images/avatar/2.jpg",
-                        },
-                        text: "When displaying three lines or more, the avatar is not aligned at the top. You should set the prop to align the avatar at the top",
-                    },
-                ]}
-                isLoading={isPostsLoading}
-            >
-                <Index/>
-            </CommentsBlock>
+            {/*<CommentsBlock isLoading={false} />*/}
+            <Index/>
         </>
     );
 };
